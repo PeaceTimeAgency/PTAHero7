@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- SVG FILTER FOR GRAIN/NOISE --- */
+        /* --- SVG FILTERS FOR GRAIN & GLOW --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,18 +21,20 @@
 
         /* --- CSS VARIABLES (THEME ENGINE) --- */
         :root {
-            --color-bg-primary: #0D1B2A;
-            --color-bg-secondary: #1B263B;
-            --color-bg-card: rgba(27, 38, 59, 0.6);
-            --color-text-primary: #E0E1DD;
-            --color-text-secondary: #778DA9;
-            --color-accent-orange: #F26419;
-            --color-accent-pink: #F00699;
+            --color-bg-primary: #0D1B2A; /* Cosmic Navy */
+            --color-bg-secondary: #1B263B; /* Darker Navy */
+            --color-bg-card: rgba(27, 38, 59, 0.7);
+            --color-bg-modal: rgba(13, 27, 42, 0.95);
+            --color-text-primary: #E0E1DD; /* Off-white */
+            --color-text-secondary: #778DA9; /* Steel Blue */
+            --color-accent-orange: #F26419; /* Neon Solar Orange */
+            --color-accent-pink: #F00699;   /* Cyber Pink */
             --font-display: 'Lexend Deca', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
-            --glow-orange: 0 0 25px rgba(242, 100, 25, 0.6);
-            --glow-pink: 0 0 25px rgba(240, 6, 153, 0.6);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow-orange: 0 0 30px rgba(242, 100, 25, 0.7);
+            --glow-pink: 0 0 30px rgba(240, 6, 153, 0.7);
+            --transition-fast: all 0.2s ease;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* --- GLOBAL STYLES & RESETS --- */
@@ -44,26 +46,26 @@
             font-family: var(--font-display);
             background-color: var(--color-bg-primary);
             color: var(--color-text-primary);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
+        /* Paper texture overlay for vintage feel */
         body::before {
             content: '';
             position: fixed;
             top:0; left:0; right:0; bottom:0;
             background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
             background-size: 300px 300px;
-            opacity: 0.03;
+            opacity: 0.04;
             z-index: 1;
             pointer-events: none;
         }
 
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             font-weight: 900;
-            line-height: 1.2;
         }
 
         a {
@@ -84,21 +86,29 @@
             position: relative;
             z-index: 2;
         }
+        
+        .section-subtitle {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+        }
 
         /* --- UTILITY CLASSES --- */
         .glass {
             background: rgba(13, 27, 42, 0.7);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .bento-card {
             background: var(--color-bg-card);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 25px;
-            transition: var(--transition);
+            padding: 30px;
+            transition: var(--transition-smooth);
             overflow: hidden;
         }
 
@@ -107,9 +117,13 @@
             box-shadow: var(--glow-orange);
             border-color: var(--color-accent-orange);
         }
-
-        .glow-orange { box-shadow: var(--glow-orange); }
-        .glow-pink { box-shadow: var(--glow-pink); }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, var(--color-accent-orange), var(--color-accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         /* --- NAVIGATION --- */
         .navbar {
@@ -117,39 +131,46 @@
             top: 0;
             width: 100%;
             z-index: 1000;
-            transition: var(--transition);
+            transition: var(--transition-smooth);
         }
 
         .navbar.scrolled {
-            background: rgba(13, 27, 42, 0.95);
+            background: rgba(13, 27, 42, 0.98);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
         .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 18px 20px;
         }
 
         .logo {
             font-family: var(--font-display);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            transition: var(--transition-fast);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
         }
         
         .logo-symbol {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background: var(--color-accent-pink);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             color: var(--color-bg-primary);
+            box-shadow: var(--glow-pink);
         }
 
         .nav-links {
@@ -161,15 +182,16 @@
         
         .nav-link {
             color: var(--color-text-secondary);
-            transition: var(--transition);
+            transition: var(--transition-fast);
             font-weight: 600;
             position: relative;
+            padding-bottom: 3px;
         }
         
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -2px;
             left: 0;
             width: 0;
             height: 2px;
@@ -204,7 +226,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, rgba(242, 100, 25, 0.1) 0%, transparent 70%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(242, 100, 25, 0.15) 0%, transparent 70%);
         }
         
         .hero::after {
@@ -223,57 +245,66 @@
         }
         
         @keyframes starfield {
-            from { transform: translateY(0); }
-            to { transform: translateY(-100%); }
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-100%) rotate(360deg); }
         }
 
         .peace-clock {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             margin: 0 auto 50px auto;
             animation: slow-float 6s ease-in-out infinite;
         }
         
         @keyframes slow-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.02); }
         }
         
         .peace-sign {
             position: absolute;
             inset: 0;
             filter: drop-shadow(var(--glow-pink));
-            animation: rotate-clock 60s linear infinite;
+            animation: rotate-clock 80s linear infinite;
         }
 
         .orbital-ring {
             position: absolute;
-            inset: -20px;
-            border: 2px solid rgba(240, 6, 153, 0.3);
+            inset: -25px;
+            border: 2px dashed rgba(240, 6, 153, 0.4);
             border-radius: 50%;
-            animation: rotate-ring 40s linear infinite reverse;
+            animation: rotate-ring 60s linear infinite reverse;
+        }
+        
+        .orbital-ring::before {
+            content: '🛸';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
         }
 
         @keyframes rotate-clock { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rotate-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .hero-content h1 {
-            font-size: clamp(2rem, 7vw, 4rem);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             margin-bottom: 20px;
             color: var(--color-text-primary);
             text-shadow: 0 0 20px rgba(242, 100, 25, 0.5);
         }
 
         .hero-content p {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--color-text-secondary);
             max-width: 700px;
             margin: 0 auto 40px auto;
         }
         
         .toggle-button {
-            padding: 14px 35px;
+            padding: 16px 40px;
             font-family: var(--font-mono);
             font-weight: 600;
             font-size: 1rem;
@@ -282,7 +313,7 @@
             border: 2px solid var(--color-accent-orange);
             border-radius: 50px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
         }
@@ -297,18 +328,18 @@
             background: var(--color-accent-orange);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
+            transition: width 0.6s ease, height 0.6s ease;
             z-index: -1;
         }
 
         .toggle-button:hover::before {
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
         }
 
         .toggle-button:hover {
             color: var(--color-bg-primary);
-            transform: scale(1.05);
+            transform: scale(1.08);
             box-shadow: var(--glow-orange);
         }
         
@@ -316,7 +347,7 @@
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            gap: 30px;
         }
 
         .transmission-card {
@@ -326,11 +357,12 @@
             background-color: #000;
             border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
 
         .transmission-card:hover {
             transform: scale(1.03);
-            box-shadow: var(--glow-pink);
+            box-shadow: 0 15px 40px -10px var(--color-accent-pink);
         }
         
         .transmission-card img {
@@ -338,7 +370,7 @@
             height: 100%;
             object-fit: cover;
             opacity: 0.8;
-            transition: var(--transition);
+            transition: var(--transition-smooth);
         }
         
         .transmission-card:hover img {
@@ -353,9 +385,11 @@
             right: 0;
             padding: 20px;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            transition: var(--transition-smooth);
+        }
+        
+        .transmission-card:hover .transmission-overlay {
+            padding: 25px;
         }
 
         .transmission-title {
@@ -393,8 +427,8 @@
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
         }
 
         /* --- GALACTIC PEACE STATS --- */
@@ -406,18 +440,30 @@
         }
         
         .stat-item h3 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-family: var(--font-mono);
-            font-weight: 600;
+            font-weight: 700;
             background: linear-gradient(to right, var(--color-accent-orange), var(--color-accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
+            transition: var(--transition-smooth);
+        }
+        
+        .stat-item:hover h3 {
+            transform: scale(1.1);
         }
 
         .stat-item p {
             font-weight: 600;
             color: var(--color-text-secondary);
+        }
+        
+        .stat-item {
+            transition: var(--transition-smooth);
+        }
+        .stat-item:hover {
+            transform: translateY(-5px);
         }
 
         /* --- RECRUITMENT CTA --- */
@@ -425,8 +471,9 @@
             background: var(--color-bg-secondary);
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 120px 0;
         }
-
+        
         .recruitment-cta .container {
             max-width: 800px;
         }
@@ -443,7 +490,7 @@
         }
         
         .cta-button {
-            padding: 16px 45px;
+            padding: 18px 50px;
             background: linear-gradient(135deg, var(--color-accent-orange), var(--color-accent-pink));
             color: var(--color-bg-primary);
             font-weight: 700;
@@ -452,14 +499,124 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--transition-smooth);
             box-shadow: var(--glow-orange);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        
+        .cta-button:hover::after {
+            animation: shine 0.5s ease-in-out;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
         }
         
         .cta-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(242, 100, 25, 0.8);
+            box-shadow: 0 0 40px rgba(242, 100, 25, 0.8);
         }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-bg-modal);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: var(--color-bg-secondary);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 20px 60px -20px black;
+        }
+        
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--color-text-primary);
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            z-index: 2001;
+            transition: var(--transition-fast);
+        }
+        
+        .modal-close:hover {
+            color: var(--color-accent-pink);
+            transform: rotate(90deg);
+        }
+
+        .modal-video-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .modal-video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .modal-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--color-text-secondary);
+            font-family: var(--font-mono);
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--color-bg-secondary);
+            border-top-color: var(--color-accent-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* --- FOOTER --- */
         .footer {
@@ -476,7 +633,7 @@
             top: -50%; left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(240, 6, 153, 0.15) 0%, transparent 50%), radial-gradient(circle, rgba(242, 100, 25, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle, rgba(240, 6, 153, 0.1) 0%, transparent 50%), radial-gradient(circle, rgba(242, 100, 25, 0.08) 0%, transparent 50%);
             animation: nebula-drift 100s linear infinite;
             z-index: -1;
         }
@@ -509,16 +666,19 @@
             .mobile-menu-toggle.active { display: none; }
             .bento-grid, .stats-grid { grid-template-columns: 1fr; }
             .peace-clock { width: 250px; height: 250px; }
+            .modal-content { aspect-ratio: 16/9; }
         }
     </style>
 </head>
 
 <!-- SVG for noise texture -->
 <svg style="position: absolute; width: 0; height: 0;">
-    <filter id="noiseFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
-        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.06 0"/>
-    </filter>
+    <defs>
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.06 0"/>
+        </filter>
+    </defs>
 </svg>
 
 <body>
@@ -526,7 +686,7 @@
     <!-- NAVIGATION -->
     <header class="navbar glass" id="navbar">
         <div class="nav-container">
-            <a href="#" class="logo">
+            <a href="#home" class="logo">
                 <div class="logo-symbol">☮</div>
                 <span>PEACE TIME AGENCY</span>
             </a>
@@ -547,7 +707,6 @@
                 <div class="peace-clock">
                     <svg class="peace-sign" viewBox="0 0 100 100">
                         <path d="M50,10 L60,40 L90,40 L65,60 L75,90 L50,70 L25,90 L35,60 L10,40 L40,40 Z" fill="none" stroke="var(--color-accent-pink)" stroke-width="3"/>
-                        <!-- Clock hands for effect -->
                         <line x1="50" y1="50" x2="50" y2="20" stroke="var(--color-accent-orange)" stroke-width="2" stroke-linecap="round"/>
                         <line x1="50" y1="50" x2="65" y2="50" stroke="var(--color-accent-orange)" stroke-width="2" stroke-linecap="round"/>
                         <circle cx="50" cy="50" r="3" fill="var(--color-accent-orange)"/>
@@ -562,10 +721,10 @@
 
         <!-- ACTIVE TRANSMISSIONS -->
         <section class="container" id="transmissions">
-            <h2 class="section-subtitle" style="color: var(--color-accent-pink); text-align: center; margin-bottom: 10px;">ACTIVE TRANSMISSIONS</h2>
+            <p class="section-subtitle" style="color: var(--color-accent-pink); text-align: center; margin-bottom: 10px;">ACTIVE TRANSMISSIONS</p>
             <h3 style="text-align: center; margin-bottom: 50px;">Our Agents Live on the Airwaves</h3>
             <div class="bento-grid">
-                <div class="transmission-card">
+                <div class="transmission-card" data-video-id="dQw4w9WgXcQ">
                     <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600" alt="Stream from Kepler-186f">
                     <div class="transmission-overlay">
                         <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
@@ -573,7 +732,7 @@
                         <p class="transmission-meta">👁 12.5K // Agent Lyra from Kepler-186f</p>
                     </div>
                 </div>
-                <div class="transmission-card">
+                <div class="transmission-card" data-video-id="jNQXAC9IVRw">
                     <img src="https://images.unsplash.com/photo-1622556950557-319676755942?q=80&w=600" alt="Stream from TRAPPIST-1">
                     <div class="transmission-overlay">
                          <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
@@ -581,7 +740,7 @@
                         <p class="transmission-meta">👁 8.2K // Agent Kai from TRAPPIST-1e</p>
                     </div>
                 </div>
-                <div class="transmission-card">
+                <div class="transmission-card" data-video-id="9bZkp7q19f0">
                     <img src="https://images.unsplash.com/photo-1611165615728-eb2a525e4464?q=80&w=600" alt="Stream from Europa">
                     <div class="transmission-overlay">
                          <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
@@ -594,7 +753,7 @@
         
         <!-- GALACTIC PEACE STATS -->
         <section class="container" id="stats">
-            <h2 class="section-subtitle" style="color: var(--color-accent-orange); text-align: center; margin-bottom: 10px;">GALACTIC PEACE INDEX</h2>
+            <p class="section-subtitle" style="color: var(--color-accent-orange); text-align: center; margin-bottom: 10px;">GALACTIC PEACE INDEX</p>
             <h3 style="text-align: center; margin-bottom: 50px;">Our Impact, By the Numbers</h3>
             <div class="stats-grid">
                 <div class="bento-card">
@@ -629,10 +788,23 @@
             <div class="container">
                 <h2>The Timeline Needs Your Voice.</h2>
                 <p>Are you a creator ready to amplify a message of peace? We're recruiting a new wave of agents for our next interstellar campaign.</p>
-                <a href="#" class="cta-button" onclick="alert('This would open a detailed application form.'); return false;">APPLY TO THE AGENCY</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfexample/viewform" target="_blank" class="cta-button">APPLY TO THE AGENCY</a>
             </div>
         </section>
     </main>
+
+    <!-- VIDEO MODAL -->
+    <div id="videoModal" class="modal">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <div class="modal-content">
+            <div class="modal-video-container" id="modalVideoContainer">
+                <div class="modal-loading">
+                    <div class="loading-spinner"></div>
+                    <p>ESTABLISHING CONNECTION...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -643,41 +815,91 @@
     </footer>
 
     <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ELEMENT SELECTORS ---
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+            const menuToggle = document.getElementById('menuToggle');
+            const menuClose = document.getElementById('menuClose');
+            const navLinks = document.getElementById('navLinks');
+            const videoModal = document.getElementById('videoModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalVideoContainer = document.getElementById('modalVideoContainer');
+            const transmissionCards = document.querySelectorAll('.transmission-card');
 
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const menuClose = document.getElementById('menuClose');
-        const navLinks = document.getElementById('navLinks');
+            // --- NAVIGATION FUNCTIONALITY ---
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.add('active');
-            menuToggle.classList.add('active');
-            menuClose.classList.add('active');
-        });
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.add('active');
+                menuToggle.classList.add('active');
+                menuClose.classList.add('active');
+            });
 
-        menuClose.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            menuToggle.classList.remove('active');
-            menuClose.classList.remove('active');
-        });
-        
-        // Close menu on link click
-        const links = document.querySelectorAll('.nav-links a');
-        links.forEach(link => {
-            link.addEventListener('click', () => {
+            menuClose.addEventListener('click', closeMobileMenu);
+            
+            function closeMobileMenu() {
                 navLinks.classList.remove('active');
                 menuToggle.classList.remove('active');
                 menuClose.classList.remove('active');
+            }
+
+            // Close mobile menu on link click
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
             });
+            
+            // --- MODAL FUNCTIONALITY ---
+            function openModal(videoId) {
+                videoModal.classList.add('active');
+                // Simulate loading
+                setTimeout(() => {
+                    modalVideoContainer.innerHTML = `
+                        <iframe 
+                            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                }, 700); // Delay for effect
+            }
+
+            function closeModal() {
+                videoModal.classList.remove('active');
+                modalVideoContainer.innerHTML = `
+                    <div class="modal-loading">
+                        <div class="loading-spinner"></div>
+                        <p>DISCONNECTING...</p>
+                    </div>
+                `;
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            
+            // Close modal on outside click
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeModal();
+                }
+            });
+
+            // Add event listeners to transmission cards
+            transmissionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const videoId = card.dataset.videoId;
+                    if (videoId) {
+                        openModal(videoId);
+                    }
+                });
+            });
+
         });
     </script>
 </body>
