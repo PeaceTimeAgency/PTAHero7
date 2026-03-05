@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peace Time Agency | Broadcasting Harmony Across the Timeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- SVG FILTER FOR GRAIN/NOISE --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            filter: url(#noiseFilter);
+        }
+
+        /* --- CSS VARIABLES (THEME ENGINE) --- */
+        :root {
+            --color-bg-primary: #0D1B2A;
+            --color-bg-secondary: #1B263B;
+            --color-bg-card: rgba(27, 38, 59, 0.6);
+            --color-text-primary: #E0E1DD;
+            --color-text-secondary: #778DA9;
+            --color-accent-orange: #F26419;
+            --color-accent-pink: #F00699;
+            --font-display: 'Lexend Deca', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --glow-orange: 0 0 25px rgba(242, 100, 25, 0.6);
+            --glow-pink: 0 0 25px rgba(240, 6, 153, 0.6);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- GLOBAL STYLES & RESETS --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top:0; left:0; right:0; bottom:0;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            background-size: 300px 300px;
+            opacity: 0.03;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1, h2, h3 {
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- UTILITY CLASSES --- */
+        .glass {
+            background: rgba(13, 27, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bento-card {
+            background: var(--color-bg-card);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-orange);
+            border-color: var(--color-accent-orange);
+        }
+
+        .glow-orange { box-shadow: var(--glow-orange); }
+        .glow-pink { box-shadow: var(--glow-pink); }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(13, 27, 42, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-symbol {
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--color-bg-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent-orange);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link:hover {
+            color: var(--color-text-primary);
+        }
+
+        .mobile-menu-toggle, .mobile-menu-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(242, 100, 25, 0.1) 0%, transparent 70%);
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left:0; width:100%; height:100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent);
+            background-size: 200% 200%;
+            animation: starfield 120s linear infinite;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        
+        @keyframes starfield {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100%); }
+        }
+
+        .peace-clock {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 50px auto;
+            animation: slow-float 6s ease-in-out infinite;
+        }
+        
+        @keyframes slow-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .peace-sign {
+            position: absolute;
+            inset: 0;
+            filter: drop-shadow(var(--glow-pink));
+            animation: rotate-clock 60s linear infinite;
+        }
+
+        .orbital-ring {
+            position: absolute;
+            inset: -20px;
+            border: 2px solid rgba(240, 6, 153, 0.3);
+            border-radius: 50%;
+            animation: rotate-ring 40s linear infinite reverse;
+        }
+
+        @keyframes rotate-clock { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rotate-ring { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .hero-content h1 {
+            font-size: clamp(2rem, 7vw, 4rem);
+            margin-bottom: 20px;
+            color: var(--color-text-primary);
+            text-shadow: 0 0 20px rgba(242, 100, 25, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--color-text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+        
+        .toggle-button {
+            padding: 14px 35px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 1rem;
+            background: var(--color-bg-secondary);
+            color: var(--color-accent-orange);
+            border: 2px solid var(--color-accent-orange);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toggle-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--color-accent-orange);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+            z-index: -1;
+        }
+
+        .toggle-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .toggle-button:hover {
+            color: var(--color-bg-primary);
+            transform: scale(1.05);
+            box-shadow: var(--glow-orange);
+        }
+        
+        /* --- ACTIVE TRANSMISSIONS (BENTO GRID) --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .transmission-card {
+            position: relative;
+            aspect-ratio: 9 / 16;
+            cursor: pointer;
+            background-color: #000;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .transmission-card:hover {
+            transform: scale(1.03);
+            box-shadow: var(--glow-pink);
+        }
+        
+        .transmission-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+        
+        .transmission-card:hover img {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .transmission-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .transmission-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .transmission-meta {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--color-accent-pink);
+            color: var(--color-bg-primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* --- GALACTIC PEACE STATS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 3rem;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            background: linear-gradient(to right, var(--color-accent-orange), var(--color-accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        /* --- RECRUITMENT CTA --- */
+        .recruitment-cta {
+            background: var(--color-bg-secondary);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .recruitment-cta .container {
+            max-width: 800px;
+        }
+        
+        .recruitment-cta h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 20px;
+        }
+        
+        .recruitment-cta p {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 40px;
+        }
+        
+        .cta-button {
+            padding: 16px 45px;
+            background: linear-gradient(135deg, var(--color-accent-orange), var(--color-accent-pink));
+            color: var(--color-bg-primary);
+            font-weight: 700;
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--glow-orange);
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(242, 100, 25, 0.8);
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            padding: 60px 20px 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(240, 6, 153, 0.15) 0%, transparent 50%), radial-gradient(circle, rgba(242, 100, 25, 0.1) 0%, transparent 50%);
+            animation: nebula-drift 100s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes nebula-drift {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .footer-logo {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .footer p {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            .nav-links, .mobile-menu-close { display: none; }
+            .nav-links { position: fixed; top: 70px; left: 0; width: 100%; background: rgba(13, 27, 42, 0.98); flex-direction: column; padding: 30px 0; }
+            .nav-links.active { display: flex; }
+            .mobile-menu-toggle, .mobile-menu-close.active { display: block; }
+            .mobile-menu-toggle.active { display: none; }
+            .bento-grid, .stats-grid { grid-template-columns: 1fr; }
+            .peace-clock { width: 250px; height: 250px; }
+        }
+    </style>
+</head>
+
+<!-- SVG for noise texture -->
+<svg style="position: absolute; width: 0; height: 0;">
+    <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.06 0"/>
+    </filter>
+</svg>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar glass" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-symbol">☮</div>
+                <span>PEACE TIME AGENCY</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#transmissions" class="nav-link">Active Transmissions</a></li>
+                <li><a href="#stats" class="nav-link">Galactic Stats</a></li>
+                <li><a href="#recruit" class="nav-link">Become an Agent</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+            <button class="mobile-menu-close" id="menuClose">✕</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="hero-content container">
+                <div class="peace-clock">
+                    <svg class="peace-sign" viewBox="0 0 100 100">
+                        <path d="M50,10 L60,40 L90,40 L65,60 L75,90 L50,70 L25,90 L35,60 L10,40 L40,40 Z" fill="none" stroke="var(--color-accent-pink)" stroke-width="3"/>
+                        <!-- Clock hands for effect -->
+                        <line x1="50" y1="50" x2="50" y2="20" stroke="var(--color-accent-orange)" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="50" y1="50" x2="65" y2="50" stroke="var(--color-accent-orange)" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="50" cy="50" r="3" fill="var(--color-accent-orange)"/>
+                    </svg>
+                    <div class="orbital-ring"></div>
+                </div>
+                <h1>Broadcasting Harmony Across the Timeline</h1>
+                <p>We are a talent-led collective empowering creators to become ambassadors of peace, one live stream at a time.</p>
+                <a href="#recruit" class="toggle-button">DEPLOY YOUR TALENT</a>
+            </div>
+        </section>
+
+        <!-- ACTIVE TRANSMISSIONS -->
+        <section class="container" id="transmissions">
+            <h2 class="section-subtitle" style="color: var(--color-accent-pink); text-align: center; margin-bottom: 10px;">ACTIVE TRANSMISSIONS</h2>
+            <h3 style="text-align: center; margin-bottom: 50px;">Our Agents Live on the Airwaves</h3>
+            <div class="bento-grid">
+                <div class="transmission-card">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600" alt="Stream from Kepler-186f">
+                    <div class="transmission-overlay">
+                        <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
+                        <h4 class="transmission-title">Cosmic Meditation</h4>
+                        <p class="transmission-meta">👁 12.5K // Agent Lyra from Kepler-186f</p>
+                    </div>
+                </div>
+                <div class="transmission-card">
+                    <img src="https://images.unsplash.com/photo-1622556950557-319676755942?q=80&w=600" alt="Stream from TRAPPIST-1">
+                    <div class="transmission-overlay">
+                         <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
+                        <h4 class="transmission-title">Galactic Diplomacy 101</h4>
+                        <p class="transmission-meta">👁 8.2K // Agent Kai from TRAPPIST-1e</p>
+                    </div>
+                </div>
+                <div class="transmission-card">
+                    <img src="https://images.unsplash.com/photo-1611165615728-eb2a525e4464?q=80&w=600" alt="Stream from Europa">
+                    <div class="transmission-overlay">
+                         <span class="live-indicator"><span class="live-dot"></span>LIVE</span>
+                        <h4 class="transmission-title">Sub-zero Chill Music Set</h4>
+                        <p class="transmission-meta">👁 5.7K // Agent Jax from Europa Station</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- GALACTIC PEACE STATS -->
+        <section class="container" id="stats">
+            <h2 class="section-subtitle" style="color: var(--color-accent-orange); text-align: center; margin-bottom: 10px;">GALACTIC PEACE INDEX</h2>
+            <h3 style="text-align: center; margin-bottom: 50px;">Our Impact, By the Numbers</h3>
+            <div class="stats-grid">
+                <div class="bento-card">
+                    <div class="stat-item">
+                        <h3>8.7M</h3>
+                        <p>Viewers United in Harmony</p>
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="stat-item">
+                        <h3>150+</h3>
+                        <p>Active Peace Ambassadors</p>
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="stat-item">
+                        <h3>47</h3>
+                        <p>Sectors Reached</p>
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="stat-item">
+                        <h3>99.8%</h3>
+                        <p>Positivity Quotient</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECRUITMENT CTA -->
+        <section class="recruitment-cta" id="recruit">
+            <div class="container">
+                <h2>The Timeline Needs Your Voice.</h2>
+                <p>Are you a creator ready to amplify a message of peace? We're recruiting a new wave of agents for our next interstellar campaign.</p>
+                <a href="#" class="cta-button" onclick="alert('This would open a detailed application form.'); return false;">APPLY TO THE AGENCY</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-logo">PEACE TIME AGENCY</p>
+            <p>&copy; 2042 Peace Time Agency. Fostering Harmony Across the Cosmos.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const menuClose = document.getElementById('menuClose');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.add('active');
+            menuToggle.classList.add('active');
+            menuClose.classList.add('active');
+        });
+
+        menuClose.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuToggle.classList.remove('active');
+            menuClose.classList.remove('active');
+        });
+        
+        // Close menu on link click
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+                menuClose.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
